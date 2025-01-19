@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarStoreApi", "CarStoreApi.csproj", "{FC86BEB4-78D9-49BD-A222-9263ACCB44C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarStore", "..\CarStore\CarStore.csproj", "{B6CD559A-455A-4C85-B598-72A164D36B59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cars_Utility", "..\Cars_Utility\Cars_Utility.csproj", "{92BBBA1C-7020-4A1C-9149-53AED2DD90EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC86BEB4-78D9-49BD-A222-9263ACCB44C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC86BEB4-78D9-49BD-A222-9263ACCB44C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC86BEB4-78D9-49BD-A222-9263ACCB44C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC86BEB4-78D9-49BD-A222-9263ACCB44C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6CD559A-455A-4C85-B598-72A164D36B59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6CD559A-455A-4C85-B598-72A164D36B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6CD559A-455A-4C85-B598-72A164D36B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6CD559A-455A-4C85-B598-72A164D36B59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92BBBA1C-7020-4A1C-9149-53AED2DD90EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92BBBA1C-7020-4A1C-9149-53AED2DD90EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92BBBA1C-7020-4A1C-9149-53AED2DD90EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92BBBA1C-7020-4A1C-9149-53AED2DD90EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
