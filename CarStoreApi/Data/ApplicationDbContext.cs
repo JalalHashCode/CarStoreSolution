@@ -10,7 +10,7 @@ namespace CarStoreApi.Data
 
         }
         public DbSet<Car> Cars { get; set; }
-
+        public DbSet<LocalUser> LocalUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
