@@ -1,0 +1,61 @@
+﻿@using CarStore.Models.Dto
+@model CarUpdateDTO
+
+<form asp-action="DeleteCar">
+	<br />
+	<div class="container border p-3 pb-2">
+		<h1 class="text-primary">
+			Delete car
+		</h1>
+
+		<input hidden asp-for="Id" />
+		<div class="row">
+
+			<div class="col-2 pb-3">
+				<label asp-for="Name" class="control-label pt-2" style="font-size:20px;"></label>
+			</div>
+			<div class="col-10 pb-3">
+				<input asp-for="Name" disabled class="form-control " />
+			</div>
+
+			<div class="col-2 pb-3">
+				<label asp-for="Model" class="control-label pt-2" style="font-size:20px;"></label>
+			</div>
+			<div class="col-10 pb-3">
+				<input asp-for="Model" disabled class="form-control " />
+			</div>
+
+			<div class="col-2 pb-3">
+				<label asp-for="Price" class="control-label pt-2" style="font-size:20px;"></label>
+			</div>
+			<div class="col-10 pb-3">
+				<input asp-for="Price" disabled class="form-control " />
+			</div>
+
+			<div class="col-2 pb-3">
+				<label asp-for="Color" class="control-label pt-2" style="font-size:20px;"></label>
+			</div>
+			<div class="col-10 pb-3">
+				<input asp-for="Color" disabled class="form-control " />
+			</div>
+
+			<div class="col-2 pb-3">
+				<label asp-for="ImageUrl" class="control-label pt-2" style="font-size:20px;"></label>
+			</div>
+			<div class="col-10 pb-3">
+				<input asp-for="ImageUrl" disabled class="form-control " />
+			</div>
+			<div class="col-5 offset-2">
+				<a asp-action="IndexCars" asp-controller="Car" class="btn-primary btn form-control">Back to List</a>
+			</div>
+			<div class="col-5">
+				<input type="submit" value="Delete" class="btn btn-danger form-control" />
+			</div>
+		</div>
+	</div>
+
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

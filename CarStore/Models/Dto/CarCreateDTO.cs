@@ -7,11 +7,11 @@ namespace CarStore.Models.Dto
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
-        public string Model { get; set; }
+        public string? Model { get; set; }
 
         [Required]
         public decimal Price { get; set; }
-        public string Color { get; set; }
-        public string ImageUrl { get; set; }
+        public string? Color { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }
