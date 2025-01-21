@@ -13,7 +13,7 @@ namespace CarStoreApi.Repository
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _db;
-        private string secretKey; 
+        private string secretKey;
         public UserRepository(ApplicationDbContext db, IConfiguration configuration)
         {
             _db = db;
@@ -35,7 +35,11 @@ namespace CarStoreApi.Repository
             && u.Password == loginRequestDTO.Password);
             if (user == null)
             {
-                return null;
+                return new LoginResponseDTO()
+                {
+                    Token = "",
+                    User = null
+                };
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -46,38 +50,42 @@ namespace CarStoreApi.Repository
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim(ClaimTypes.Name, user.Password)
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new (new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
             {
                 Token = tokenHandler.WriteToken(token),
-                User = user
+                User = user,
+                
             };
-            return loginResponseDTO; 
+            loginResponseDTO.User.Password = "";
+            return loginResponseDTO;
         }
 
         public async Task<LocalUser> Register(RegisterationRequestDTO registerationRequestDTO)
         {
-            LocalUser user = new();
-            var existedUser = _db.LocalUsers.FirstOrDefault(u => u.UserName.ToLower() == registerationRequestDTO.UserName.ToLower());
-            if (registerationRequestDTO != null && existedUser != null)
+            if (registerationRequestDTO != null)
             {
+                LocalUser user = new();
                 user.UserName = registerationRequestDTO.UserName;
                 user.Password = registerationRequestDTO.Password;
                 user.Name = registerationRequestDTO.Name;
                 user.Role = registerationRequestDTO.Role;
-
                 _db.LocalUsers.Add(user);
                 await _db.SaveChangesAsync();
+                user.Password = "";
+                return user;
             }
-            user.Password = "";
-            return null;
-
+            return null; 
         }
+            
+
+        
     }
 }

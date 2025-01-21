@@ -6,6 +6,7 @@ using CarStoreApi.Data;
 using CarStoreApi.Models;
 using CarStoreApi.Models.Dto;
 using CarStoreApi.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace CarStoreApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetAllCars()
         {
@@ -57,12 +59,14 @@ namespace CarStoreApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Admin")]
+
         public async Task<ActionResult<APIResponse>> GetCar(int id)
         {
 
             try
             {
-                if (id == 0) 
+                if (id == 0)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
@@ -73,7 +77,7 @@ namespace CarStoreApi.Controllers
                 if (car == null)
                 {
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add( "This item is not Exist");
+                    _response.ErrorMessages.Add("This item is not Exist");
                     _response.StatusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
@@ -93,6 +97,7 @@ namespace CarStoreApi.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -135,11 +140,11 @@ namespace CarStoreApi.Controllers
         }
 
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<APIResponse>> DeleteCar(int id)
         {
             try
@@ -148,7 +153,7 @@ namespace CarStoreApi.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
-                    _response.ErrorMessages.Add("Please Choose Valid Item"); 
+                    _response.ErrorMessages.Add("Please Choose Valid Item");
                     return BadRequest(_response);
                 }
                 var car = await _dbCars.GetAsync(u => u.Id == id);
@@ -161,7 +166,7 @@ namespace CarStoreApi.Controllers
                 }
 
                 await _dbCars.RemoveAsync(car);
-                _response.StatusCode = HttpStatusCode.NoContent;                
+                _response.StatusCode = HttpStatusCode.NoContent;
                 return Ok(_response);
             }
             catch (Exception ex)
@@ -178,6 +183,7 @@ namespace CarStoreApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<APIResponse>> UpdateCar(int id, [FromBody] CarUpdateDTO carUpdateDto)
         {
 
