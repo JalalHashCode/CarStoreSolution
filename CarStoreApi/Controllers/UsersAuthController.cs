@@ -9,11 +9,11 @@ namespace CarStoreApi.Controllers
 {
     [Route("api/UsersAuth")]
     [ApiController]
-    public class UsersController : Controller
+    public class UsersAuthController : Controller
     {
         private readonly IUserRepository _userRepository;
         protected APIResponse _response; 
-        public UsersController(IUserRepository userRepository)
+        public UsersAuthController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
             this._response = new APIResponse();
