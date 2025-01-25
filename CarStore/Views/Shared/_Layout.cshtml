@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Cars_Utility
+@inject IHttpContextAccessor httpAcc;
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -31,12 +33,26 @@
 							</li>
 						</ul>
 						<ul class="navbar-nav ml-auto pe-3">
-							<li class="nav-item pe-2">
-								<a class="btn btn-outline-primary nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-							</li>
-							<li class="nav-item">
-								<a class="btn btn-outline-primary nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-							</li>
+
+							@if (httpAcc.HttpContext.Session.GetString(StaticDetails.SessionToken) != null &&
+								httpAcc.HttpContext.Session.GetString(StaticDetails.SessionToken).ToString().Length > 0)
+							{
+								<li class="nav-item">
+									<a class="btn btn-outline-primary nav-link" asp-controller="Auth" asp-action="Logout">Logout</a>
+								</li>
+							}
+
+							else
+							{
+								<li class="nav-item pe-2">
+									<a class="btn btn-outline-primary nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+								</li>
+								<li class="nav-item">
+									<a class="btn btn-outline-primary nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+								</li>
+							}
+
+
 						</ul>
 					</div>
 

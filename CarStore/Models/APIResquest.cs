@@ -7,5 +7,6 @@ namespace CarStore.Models
         public ApiTye apiType { get; set; } = ApiTye.GET;
         public string Url { get; set; }
         public object Data { get; set; }
+        public string Token { get; set; }
     }
 }

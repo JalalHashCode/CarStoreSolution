@@ -1,7 +1,9 @@
-﻿using Cars_Utility;
+﻿using System.Net.Http.Headers;
+using Cars_Utility;
 using CarStore.Models;
 using CarStore.Services.IServices;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CarStore.Services
 {
@@ -43,6 +45,10 @@ namespace CarStore.Services
                 }
 
                 HttpResponseMessage apiResponse = null;
+                if (!string.IsNullOrEmpty(apiRequest.Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiRequest.Token);
+                }
                 apiResponse = await client.SendAsync(message);
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();
                 var APIResponse = JsonConvert.DeserializeObject<T>(apiContent);

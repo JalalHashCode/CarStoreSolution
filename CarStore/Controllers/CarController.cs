@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Cars_Utility;
 using CarStore.Models;
 using CarStore.Models.Dto;
 using CarStore.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -17,28 +19,32 @@ namespace CarStore.Controllers
             _carService = carService;
             _mapper = mapper;
         }
+
+        
         public async Task<IActionResult> IndexCars()
         {
             List<CarDTO> carsList = new List<CarDTO>();
-            var response = await _carService.GetAllAsync<APIResponse>();
+            var response = await _carService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(StaticDetails.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 carsList = JsonConvert.DeserializeObject<List<CarDTO>>(Convert.ToString(response.Result));
             }
             return View(carsList);
         }
+
         public async Task<IActionResult> CreateCar()
         {
             return View();
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCar(CarCreateDTO cardDto)
         {
             if (ModelState.IsValid)
             {
-                var response = await _carService.CreateAsync<APIResponse>(cardDto);
+                var response = await _carService.CreateAsync<APIResponse>(cardDto, HttpContext.Session.GetString(StaticDetails.SessionToken) );
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = "Car Created Successfully"; 
@@ -49,11 +55,12 @@ namespace CarStore.Controllers
             return View(cardDto);
         }
 
+      
         public async Task<IActionResult> UpdateCar(int carId)
         {
             if (carId != 0)
             {
-                var response = await _carService.GetAsync<APIResponse>(carId);
+                var response = await _carService.GetAsync<APIResponse>(carId, HttpContext.Session.GetString(StaticDetails.SessionToken));
                 if (response != null && response.IsSuccess)
                 {
                     CarUpdateDTO updateDto = new CarUpdateDTO();
@@ -66,13 +73,14 @@ namespace CarStore.Controllers
             return NotFound();
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCar(CarUpdateDTO cardDto)
         {
             if (ModelState.IsValid)
             {
-                var response = await _carService.UpdateAsync<APIResponse>(cardDto);
+                var response = await _carService.UpdateAsync<APIResponse>(cardDto, HttpContext.Session.GetString(StaticDetails.SessionToken));
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = "Car Updated Successfully";
@@ -84,10 +92,10 @@ namespace CarStore.Controllers
             return View(cardDto);
         }
 
+       
         public async Task<IActionResult> DeleteCar(int carId)
         {
-
-            var response = await _carService.GetAsync<APIResponse>(carId);
+            var response = await _carService.GetAsync<APIResponse>(carId, HttpContext.Session.GetString(StaticDetails.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 CarUpdateDTO updateDto = new CarUpdateDTO();
@@ -98,12 +106,14 @@ namespace CarStore.Controllers
             return NotFound();
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCar(CarUpdateDTO cardDto)
         {
+            var token = HttpContext.Session.GetString(StaticDetails.SessionToken);
 
-            var response = await _carService.DeleteAsync<APIResponse>(cardDto.Id);
+            var response = await _carService.DeleteAsync<APIResponse>(cardDto.Id, token);
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Car Deleted Successfully";

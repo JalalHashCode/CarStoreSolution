@@ -70,7 +70,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     //if token + Bearer prefix is needed then Scheme =  "Bearer", Id = "Bearer"
-    options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n " +
         "Enter 'Bearer' [space] or without Bearer Prefix then your token in the text input below.\r\n\r\n" +
@@ -88,7 +88,7 @@ builder.Services.AddSwaggerGen(options =>
             Reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
-                Id = "ApiKey"
+                Id = "Bearer"
             },          
             
         },
