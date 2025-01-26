@@ -58,6 +58,9 @@ namespace CarStoreApi.Controllers
                 return BadRequest(_response);
             }
 
+            _response.StatusCode = HttpStatusCode.Created;
+            _response.Result = user;
+            _response.IsSuccess = true; 
             return Ok(_response);
         }
     }

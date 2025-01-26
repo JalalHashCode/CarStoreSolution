@@ -4,6 +4,7 @@ using CarStoreApi.Data;
 using CarStoreApi.Repository;
 using CarStoreApi.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
+builder.Services.AddResponseCaching();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -62,9 +64,14 @@ builder.Services.AddAuthentication(x =>
         };
     });
 
-builder.Services.AddControllers(
-    // option => {option.ReturnHttpNotAcceptable = true;}
-    ).AddNewtonsoftJson();
+builder.Services.AddControllers(option =>
+{
+    option.CacheProfiles.Add("CommonCache",
+        new CacheProfile()
+        {
+            Duration = 40
+        }); 
+}).AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -78,7 +85,7 @@ builder.Services.AddSwaggerGen(options =>
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        
+
 
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement()
@@ -89,8 +96,8 @@ builder.Services.AddSwaggerGen(options =>
             {
                 Type = ReferenceType.SecurityScheme,
                 Id = "Bearer"
-            },          
-            
+            },
+
         },
         new List<string>()
         }

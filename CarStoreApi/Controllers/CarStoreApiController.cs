@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using AutoMapper;
 using CarStoreApi.Data;
 using CarStoreApi.Models;
@@ -34,16 +35,28 @@ namespace CarStoreApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<APIResponse>> GetAllCars()
+        [ResponseCache(CacheProfileName = "CommonCache")]
+        public async Task<ActionResult<APIResponse>> GetAllCars([FromQuery(Name = "Color Filter")] string ColorFilter = "",
+            [FromQuery(Name = "Name Filter")] string NameFilter = "")
         {
             try
             {
-                var actionStartTime = DateTime.Now;
-                _logger.LogInformation("Action completed in {actionStartTime}", actionStartTime);
-
                 IEnumerable<Car> carsList = await _dbCars.GetAllAsync();
+                //Filteration
+                if (ColorFilter != "")
+                {
+                    carsList = carsList.Where(u => u.Color == ColorFilter);
+
+                }
+                if (NameFilter != "")
+                {
+                    carsList = carsList.Where(u => u.Name == NameFilter);
+
+                }
+
                 _response.Result = _mapper.Map<List<CarDTO>>(carsList);
                 _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
                 return Ok(_response);
             }
             catch (Exception ex)
@@ -54,7 +67,6 @@ namespace CarStoreApi.Controllers
 
             return _response;
         }
-
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -144,7 +156,6 @@ namespace CarStoreApi.Controllers
         }
 
 
-       
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -152,7 +163,6 @@ namespace CarStoreApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [Authorize(Roles = "Admin")]
-
         public async Task<ActionResult<APIResponse>> DeleteCar(int id)
         {
             try
@@ -222,7 +232,7 @@ namespace CarStoreApi.Controllers
 
         }
 
-        
+
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

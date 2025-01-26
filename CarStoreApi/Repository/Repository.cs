@@ -39,10 +39,14 @@ namespace CarStoreApi.Repository
         public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null)
         {
             IQueryable<T> query = DbSet;
+
+            //Filteration
             if (filter != null)
             {
                 query = query.Where(filter);
             }
+
+           
             return await query.ToListAsync();
         }
 

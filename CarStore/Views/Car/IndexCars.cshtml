@@ -23,6 +23,7 @@
 				<th>Name</th>
 				<th>Model</th>
 				<th>Price</th>
+				<th>Color</th>
 				<th></th>
 
 			</tr>
@@ -34,6 +35,7 @@
 					<td>@item.Name</td>
 					<td>@item.Model</td>
 					<td>@item.Price</td>
+					<td>@item.Color</td>
 					@if (httpAcc.HttpContext.Session.GetString(StaticDetails.SessionToken) != null &&
 										httpAcc.HttpContext.Session.GetString(StaticDetails.SessionToken).ToString().Length > 0)
 					{
