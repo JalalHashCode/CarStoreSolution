@@ -64,7 +64,7 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 1,
                             Color = "red",
-                            CreatedDate = new DateTime(2025, 1, 20, 13, 16, 29, 769, DateTimeKind.Local).AddTicks(6097),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2267),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-53043.jpg?w=360",
                             Model = "BMW",
                             Name = "Foo",
@@ -75,18 +75,18 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 2,
                             Color = "black",
-                            CreatedDate = new DateTime(2025, 1, 20, 13, 16, 29, 769, DateTimeKind.Local).AddTicks(6211),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2316),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52982.jpg?w=996",
                             Model = "Mercedes",
                             Name = "Foo",
                             Price = 5500m,
-                            UpdatedDate = new DateTime(2025, 1, 20, 13, 16, 29, 769, DateTimeKind.Local).AddTicks(6219)
+                            UpdatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2318)
                         },
                         new
                         {
                             Id = 3,
                             Color = "bluce",
-                            CreatedDate = new DateTime(2025, 1, 20, 13, 16, 29, 769, DateTimeKind.Local).AddTicks(6228),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2320),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52413.jpg?w=996",
                             Model = "Volvo",
                             Name = "Foo",
@@ -97,7 +97,7 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 4,
                             Color = "Red",
-                            CreatedDate = new DateTime(2025, 1, 20, 13, 16, 29, 769, DateTimeKind.Local).AddTicks(6237),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2323),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-53043.jpg?w=360",
                             Model = "Nissan",
                             Name = "Foo",
@@ -108,7 +108,7 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 5,
                             Color = "Black",
-                            CreatedDate = new DateTime(2025, 1, 20, 13, 16, 29, 769, DateTimeKind.Local).AddTicks(6246),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2325),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52441.jpg?w=360",
                             Model = "Qere",
                             Name = "Foo",

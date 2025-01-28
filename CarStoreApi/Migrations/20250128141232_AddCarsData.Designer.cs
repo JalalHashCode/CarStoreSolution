@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarStoreApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250118113131_updateCarsTable")]
-    partial class updateCarsTable
+    [Migration("20250128141232_AddCarsData")]
+    partial class AddCarsData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,7 +67,7 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 1,
                             Color = "red",
-                            CreatedDate = new DateTime(2025, 1, 18, 13, 31, 30, 826, DateTimeKind.Local).AddTicks(9251),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2267),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-53043.jpg?w=360",
                             Model = "BMW",
                             Name = "Foo",
@@ -78,18 +78,18 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 2,
                             Color = "black",
-                            CreatedDate = new DateTime(2025, 1, 18, 13, 31, 30, 826, DateTimeKind.Local).AddTicks(9290),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2316),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52982.jpg?w=996",
                             Model = "Mercedes",
                             Name = "Foo",
                             Price = 5500m,
-                            UpdatedDate = new DateTime(2025, 1, 18, 13, 31, 30, 826, DateTimeKind.Local).AddTicks(9292)
+                            UpdatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2318)
                         },
                         new
                         {
                             Id = 3,
                             Color = "bluce",
-                            CreatedDate = new DateTime(2025, 1, 18, 13, 31, 30, 826, DateTimeKind.Local).AddTicks(9294),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2320),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52413.jpg?w=996",
                             Model = "Volvo",
                             Name = "Foo",
@@ -100,7 +100,7 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 4,
                             Color = "Red",
-                            CreatedDate = new DateTime(2025, 1, 18, 13, 31, 30, 826, DateTimeKind.Local).AddTicks(9326),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2323),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-53043.jpg?w=360",
                             Model = "Nissan",
                             Name = "Foo",
@@ -111,13 +111,42 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 5,
                             Color = "Black",
-                            CreatedDate = new DateTime(2025, 1, 18, 13, 31, 30, 826, DateTimeKind.Local).AddTicks(9329),
+                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2325),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52441.jpg?w=360",
                             Model = "Qere",
                             Name = "Foo",
                             Price = 6000m,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("CarStoreApi.Models.LocalUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LocalUsers");
                 });
 #pragma warning restore 612, 618
         }

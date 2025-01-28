@@ -12,7 +12,7 @@ namespace CarStoreApi.Controllers
     public class UsersAuthController : Controller
     {
         private readonly IUserRepository _userRepository;
-        protected APIResponse _response; 
+        protected APIResponse _response;
         public UsersAuthController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
@@ -23,44 +23,51 @@ namespace CarStoreApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
+            if (loginRequestDTO == null)
+            {
+                return BadRequest();
+            }
             var loginResponse = await _userRepository.Login(loginRequestDTO);
-            if (loginResponse.User == null || string.IsNullOrEmpty(loginResponse.Token))
+            if (loginResponse.User == null && loginResponse.Message != string.Empty)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = true;
-                _response.ErrorMessages.Add("Username or Password is incorrect"); 
+                _response.IsSuccess = false;
+                _response.ErrorMessages.Add(loginResponse.Message);
                 return BadRequest(_response);
             }
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = loginResponse; 
-            return Ok(_response);
+
+            if (loginResponse.User != null && !string.IsNullOrEmpty(loginResponse.Token))
+            {
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
+                _response.Result = loginResponse;
+                return Ok(_response);
+            }
+            return BadRequest("Unexpected Error happened");
+
 
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterationRequestDTO registerRequestDTO)
         {
-           bool UserNameUnique = await _userRepository.IsUniqueUser(registerRequestDTO.UserName);
-            if (!UserNameUnique)
+            if (registerRequestDTO == null)
             {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Username already exists");
-                return BadRequest(_response);
+                return BadRequest();
             }
-            var user = await _userRepository.Register(registerRequestDTO);
-            if (user == null) 
+
+            var registerResponse = await _userRepository.Register(registerRequestDTO);
+            if (registerResponse.User == null)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Error while Registering");
+                _response.ErrorMessages.Add(registerResponse.Message);
                 return BadRequest(_response);
             }
 
             _response.StatusCode = HttpStatusCode.Created;
-            _response.Result = user;
-            _response.IsSuccess = true; 
+            _response.Result = registerResponse.User;
+            _response.IsSuccess = true;
             return Ok(_response);
         }
     }

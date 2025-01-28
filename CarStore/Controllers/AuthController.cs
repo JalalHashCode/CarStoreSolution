@@ -49,9 +49,9 @@ namespace CarStore.Controllers
             else
             {
                 ModelState.AddModelError("CustomError", response.ErrorMessages.FirstOrDefault());
-                return View(obj);
+                return View();
             }
-            return View();
+            
         }
 
         [HttpGet]
@@ -64,12 +64,16 @@ namespace CarStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterationRequestDTO obj)
         {
-            APIResponse result = await _authService.RegisterAsync<APIResponse>(obj);
-            if (result != null && result.IsSuccess)
+            APIResponse response = await _authService.RegisterAsync<APIResponse>(obj);
+            if (response != null && response.IsSuccess)
             {
                 return RedirectToAction("Login");
             }
-            return View();
+            else
+            {
+                ModelState.AddModelError("CustomError", response.ErrorMessages.FirstOrDefault());
+                return View();
+            }
         }
 
         [HttpGet]

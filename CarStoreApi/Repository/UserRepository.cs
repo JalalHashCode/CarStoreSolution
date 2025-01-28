@@ -31,61 +31,85 @@ namespace CarStoreApi.Repository
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
-            var user = _db.LocalUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower()
+            var usernameExist = _db.LocalUsers.Any(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
+            var PassExit = _db.LocalUsers.Any(u => u.Password == loginRequestDTO.Password);
+
+            string message = string.Empty;
+            if (usernameExist && !PassExit) { message = "Password is Invalid"; }
+
+            if (!usernameExist && PassExit) { message = "UserName is Invalid"; }
+
+            if (!usernameExist && !PassExit) { message = "This User is Not Registered "; }
+            if (usernameExist && PassExit)
+            {
+                var user = _db.LocalUsers.FirstOrDefault(u => u.UserName == loginRequestDTO.UserName
             && u.Password == loginRequestDTO.Password);
-            if (user == null)
-            {
-                return new LoginResponseDTO()
-                {
-                    Token = "",
-                    User = null
-                };
-            }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secretKey);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(secretKey);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role),
                     new Claim(ClaimTypes.Name, user.Password)
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-            };
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
+                {
+                    Token = tokenHandler.WriteToken(token),
+                    User = user,
+
+                };
+
+                return loginResponseDTO;
+            }
+
+            return new LoginResponseDTO()
             {
-                Token = tokenHandler.WriteToken(token),
-                User = user,
-                
+                Message = message
             };
-            loginResponseDTO.User.Password = "";
-            return loginResponseDTO;
         }
 
-        public async Task<LocalUser> Register(RegisterationRequestDTO registerationRequestDTO)
+        public async Task<RegisterationResponseDTO> Register(RegisterationRequestDTO registerationRequestDTO)
         {
-            if (registerationRequestDTO != null)
+            bool isUnique = await IsUniqueUser(registerationRequestDTO.UserName);
+            if (!isUnique)
             {
-                LocalUser user = new();
-                user.UserName = registerationRequestDTO.UserName;
-                user.Password = registerationRequestDTO.Password;
-                user.Name = registerationRequestDTO.Name;
-                user.Role = registerationRequestDTO.Role;
+                return new RegisterationResponseDTO() { Message = "This UserName already used" };
+            }
+
+                if (registerationRequestDTO != null)
+            {
+                LocalUser user = new()
+                {
+                    UserName = registerationRequestDTO.UserName,
+                    Password = registerationRequestDTO.Password,
+                    Name = registerationRequestDTO.Name,
+                    Role = registerationRequestDTO.Role
+                };
                 _db.LocalUsers.Add(user);
                 await _db.SaveChangesAsync();
-                user.Password = "";
-                return user;
-            }
-            return null; 
-        }
-            
 
-        
+
+                return new RegisterationResponseDTO()
+                {
+                    User = user,
+                    Message = "Successful Register"
+                };
+            }
+            return new RegisterationResponseDTO() { Message = string.Empty };
+
+        }
+
+
+
     }
 }
