@@ -12,18 +12,74 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarStoreApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250128141232_AddCarsData")]
-    partial class AddCarsData
+    [Migration("20250128182446_AddCarsDatadfdfd")]
+    partial class AddCarsDatadfdfd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CarStoreApi.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
 
             modelBuilder.Entity("CarStoreApi.Models.Car", b =>
                 {
@@ -60,14 +116,14 @@ namespace CarStoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Car");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             Color = "red",
-                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2267),
+                            CreatedDate = new DateTime(2025, 1, 28, 20, 24, 46, 396, DateTimeKind.Local).AddTicks(149),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-53043.jpg?w=360",
                             Model = "BMW",
                             Name = "Foo",
@@ -78,18 +134,18 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 2,
                             Color = "black",
-                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2316),
+                            CreatedDate = new DateTime(2025, 1, 28, 20, 24, 46, 396, DateTimeKind.Local).AddTicks(189),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52982.jpg?w=996",
                             Model = "Mercedes",
                             Name = "Foo",
                             Price = 5500m,
-                            UpdatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2318)
+                            UpdatedDate = new DateTime(2025, 1, 28, 20, 24, 46, 396, DateTimeKind.Local).AddTicks(191)
                         },
                         new
                         {
                             Id = 3,
                             Color = "bluce",
-                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2320),
+                            CreatedDate = new DateTime(2025, 1, 28, 20, 24, 46, 396, DateTimeKind.Local).AddTicks(194),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52413.jpg?w=996",
                             Model = "Volvo",
                             Name = "Foo",
@@ -100,7 +156,7 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 4,
                             Color = "Red",
-                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2323),
+                            CreatedDate = new DateTime(2025, 1, 28, 20, 24, 46, 396, DateTimeKind.Local).AddTicks(196),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-53043.jpg?w=360",
                             Model = "Nissan",
                             Name = "Foo",
@@ -111,7 +167,7 @@ namespace CarStoreApi.Migrations
                         {
                             Id = 5,
                             Color = "Black",
-                            CreatedDate = new DateTime(2025, 1, 28, 16, 12, 31, 661, DateTimeKind.Local).AddTicks(2325),
+                            CreatedDate = new DateTime(2025, 1, 28, 20, 24, 46, 396, DateTimeKind.Local).AddTicks(198),
                             ImageUrl = "https://img.freepik.com/premium-photo/photo-supper-shine-bmw-series-stylish-design_1025753-52441.jpg?w=360",
                             Model = "Qere",
                             Name = "Foo",

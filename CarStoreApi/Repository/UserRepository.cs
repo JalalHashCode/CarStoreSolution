@@ -1,10 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using CarStoreApi.Data;
 using CarStoreApi.Models;
 using CarStoreApi.Models.Dto;
 using CarStoreApi.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,15 +16,24 @@ namespace CarStoreApi.Repository
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IMapper _mapper;
         private string secretKey;
-        public UserRepository(ApplicationDbContext db, IConfiguration configuration)
+
+        public UserRepository(ApplicationDbContext db, IConfiguration configuration, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
             _db = db;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _mapper = mapper;
             secretKey = configuration.GetValue<string>("ApiSettings:SecretKey");
         }
         public async Task<bool> IsUniqueUser(string username)
         {
-            var user = await _db.LocalUsers.FirstOrDefaultAsync(x => x.UserName == username);
+            var user = await _db.ApplicationUsers
+                .FirstOrDefaultAsync(x => x.UserName == username);
+
             if (user != null)
             {
                 return false;
@@ -31,31 +43,40 @@ namespace CarStoreApi.Repository
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
-            var usernameExist = _db.LocalUsers.Any(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
-            var PassExit = _db.LocalUsers.Any(u => u.Password == loginRequestDTO.Password);
+            var user = await _db.ApplicationUsers
+               .FirstOrDefaultAsync(x => x.UserName == loginRequestDTO.UserName);
 
-            string message = string.Empty;
-            if (usernameExist && !PassExit) { message = "Password is Invalid"; }
-
-            if (!usernameExist && PassExit) { message = "UserName is Invalid"; }
-
-            if (!usernameExist && !PassExit) { message = "This User is Not Registered "; }
-            if (usernameExist && PassExit)
+            if (user == null)
             {
-                var user = _db.LocalUsers.FirstOrDefault(u => u.UserName == loginRequestDTO.UserName
-            && u.Password == loginRequestDTO.Password);
+                return new LoginResponseDTO()
+                {
+                    ErrorMessage = "Please insert valid UserName"
+                };
+            }
 
+            bool isValidPassword = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
+
+            if (!isValidPassword)
+            {
+                return new LoginResponseDTO()
+                {
+                    ErrorMessage = "Please insert valid Password"
+                };
+            }
+
+            if (user != null && isValidPassword)
+            {
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(secretKey);
+                var roles = await _userManager.GetRolesAsync(user);
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role),
-                    new Claim(ClaimTypes.Name, user.Password)
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Role, roles.FirstOrDefault())
                     }),
                     Expires = DateTime.UtcNow.AddDays(1),
                     SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
@@ -65,7 +86,8 @@ namespace CarStoreApi.Repository
                 LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
                 {
                     Token = tokenHandler.WriteToken(token),
-                    User = user,
+                    User = _mapper.Map<UserDTO>(user),
+                    Role = roles.FirstOrDefault()
 
                 };
 
@@ -74,7 +96,7 @@ namespace CarStoreApi.Repository
 
             return new LoginResponseDTO()
             {
-                Message = message
+                ErrorMessage = ""
             };
         }
 
@@ -83,33 +105,71 @@ namespace CarStoreApi.Repository
             bool isUnique = await IsUniqueUser(registerationRequestDTO.UserName);
             if (!isUnique)
             {
-                return new RegisterationResponseDTO() { Message = "This UserName already used" };
-            }
-
-                if (registerationRequestDTO != null)
-            {
-                LocalUser user = new()
-                {
-                    UserName = registerationRequestDTO.UserName,
-                    Password = registerationRequestDTO.Password,
-                    Name = registerationRequestDTO.Name,
-                    Role = registerationRequestDTO.Role
-                };
-                _db.LocalUsers.Add(user);
-                await _db.SaveChangesAsync();
-
-
                 return new RegisterationResponseDTO()
                 {
-                    User = user,
-                    Message = "Successful Register"
+                    errors = new List<string>()
+                    {
+                        "This UserName Already Exist"
+                    }
                 };
             }
-            return new RegisterationResponseDTO() { Message = string.Empty };
+
+            if (registerationRequestDTO != null)
+            {
+
+                ApplicationUser user = new()
+                {
+                    UserName = registerationRequestDTO.UserName,
+                    Name = registerationRequestDTO.Name,
+                };
+
+                try
+                {
+                    var roleExists = await _roleManager.RoleExistsAsync("Admin");
+
+                    if (!roleExists)
+                    {
+                        var roleResult = await _roleManager.CreateAsync(new IdentityRole("Admin"));
+
+                        if (!roleResult.Succeeded)
+                        {
+                            // Handle the error according to your application's requirements
+                        }
+                    }
+
+                    var result = await _userManager.CreateAsync(user, registerationRequestDTO.Password);
+                    if (result.Succeeded)
+                    {
+
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                        return new RegisterationResponseDTO()
+                        {
+                            User = _mapper.Map<UserDTO>(user),
+                        };
+
+                    }
+                    else
+                    {
+                        return new RegisterationResponseDTO()
+                        {
+                            errors = result.Errors.Select(e => e.Description).ToList()
+                        };
+                    }
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    return new RegisterationResponseDTO()
+                    {
+                        errors = new List<string> { ex.Message }
+                    };
+                }
+            }
+            return new RegisterationResponseDTO() { errors = new List<string>() };
 
         }
-
-
 
     }
 }

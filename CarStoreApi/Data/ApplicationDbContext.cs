@@ -1,19 +1,21 @@
 ﻿using CarStoreApi.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarStoreApi.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { 
 
         }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Car> Cars { get; set; }
-        public DbSet<LocalUser> LocalUsers { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Car>().HasData(
 
                 new Car()

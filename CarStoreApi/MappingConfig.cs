@@ -12,6 +12,7 @@ namespace CarStoreApi
             CreateMap<Car, CarDTO>().ReverseMap();
             CreateMap<Car, CarUpdateDTO>().ReverseMap();
             CreateMap<Car, CarCreateDTO>().ReverseMap();
+            CreateMap<ApplicationUser, UserDTO>().ReverseMap();
         }
     }
 }

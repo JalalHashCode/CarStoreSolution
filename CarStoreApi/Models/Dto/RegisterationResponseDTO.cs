@@ -3,8 +3,9 @@
     public class RegisterationResponseDTO
     {
 
-        public LocalUser User { get; set; }
-        public string Message { get; set; }
-        
+        public UserDTO User { get; set; }
+        public List<string> errors { get; set; } 
+
+
     }
 }

@@ -28,11 +28,11 @@ namespace CarStoreApi.Controllers
                 return BadRequest();
             }
             var loginResponse = await _userRepository.Login(loginRequestDTO);
-            if (loginResponse.User == null && loginResponse.Message != string.Empty)
+            if (loginResponse.User == null && loginResponse.ErrorMessage != string.Empty)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add(loginResponse.Message);
+                _response.ErrorMessages.Add(loginResponse.ErrorMessage);
                 return BadRequest(_response);
             }
 
@@ -61,7 +61,7 @@ namespace CarStoreApi.Controllers
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add(registerResponse.Message);
+                _response.ErrorMessages = registerResponse.errors;
                 return BadRequest(_response);
             }
 
