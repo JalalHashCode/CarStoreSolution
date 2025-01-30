@@ -24,7 +24,6 @@ namespace CarStore.Controllers
         public IActionResult Login()
         {
    
-            //LoginRequestDTO obj = new LoginRequestDTO();
             return View();
         }
 
